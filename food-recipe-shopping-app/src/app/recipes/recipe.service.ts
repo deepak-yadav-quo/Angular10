@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 export class RecipeService {
     recipesChanged = new Subject<Recipe[]>();
 
-    private recipes: Recipe[] = [
+    /*private recipes: Recipe[] = [
         new Recipe('A test recipe',
             'Simply a test recipe description',
             'https://www.gimmesomeoven.com/wp-content/uploads/2014/03/Cajun-Jambalaya-Recipe-with-Andouille-Sausage-Shrimp-and-Chicken-32.jpg',
@@ -24,10 +24,16 @@ export class RecipeService {
                 new Ingredient('Apple',1),
                 new Ingredient('Almonds',10)
             ])
-    ];
+    ];*/
+    private recipes:Recipe[] = [];
 
     constructor(private slService: ShoppingListService) {
 
+    }
+
+    setRecipes(recipes: Recipe[]) {
+        this.recipes = recipes;
+        this.recipesChanged.next(this.recipes.slice());
     }
 
     getRecipes() {
@@ -51,4 +57,8 @@ export class RecipeService {
         this.recipesChanged.next(this.recipes.slice());
     }
 
+    deleteRecipe(index: number) {
+        this.recipes.splice(index, 1);
+        this.recipesChanged.next(this.recipes.slice());
+    }
 }
