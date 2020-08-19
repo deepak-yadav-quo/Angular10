@@ -15,11 +15,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   booksSubscription: Subscription;
   constructor(private router: Router,
               private route: ActivatedRoute,
-              private booksService: BooksService) { }
+              private booksService: BooksService) { 
+                console.log("constructor called!");
+              }
 
   ngOnInit(): void {
-    this.booksSubscription = this.booksService.fetchBooks().subscribe();
-    this.books = this.booksService.getBooks();
+    this.booksSubscription = this.booksService.fetchBooks().subscribe(
+      books => {
+        if(books !== null) {
+          this.books = books;
+        }
+      }
+    );
     console.log(this.books);
   }
 
@@ -30,10 +37,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   onEditBook(id: number) {
     this.router.navigate([id, 'edit'], { relativeTo: this.route });
   }
+
+  onViewBook(id: number) {
+    this.router.navigate([id], { relativeTo: this.route });
+  }
+
   onDeleteBook(id: number) {
     this.booksService.deleteBook(id);
-    window.location.reload();
   }
+
   ngOnDestroy() {
     this.booksSubscription.unsubscribe();
   }

@@ -1,28 +1,24 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { concat } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { Book } from './book.model';
-import { Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'}) 
 export class BooksService {
-    booksChanged = new Subject<Book[]>();
-    private books: Book[] = [];
-
-    constructor(private http: HttpClient) {}
+    books: Book[] = [];
+    
+    constructor(private http: HttpClient,
+                private router: Router) {
+        console.log(this.books);
+    }
 
     addBook(book: Book) {
         this.books.push(book);
-        this.booksChanged.next(this.books.slice());
-        this.updateBookDatabase(this.books.length);
-    }
-
-    getBooks() {
-        if(this.books.length === 0){
-            return this.books;
-        }
-        return this.books.slice();
+        console.log(this.books);
+        this.updateBookDatabase();
     }
 
     getBook(id: number) {
@@ -35,7 +31,11 @@ export class BooksService {
         )
         .pipe(tap(
             books => {
-                this.books = books;
+                console.log(books);
+                console.log(this.books);
+                if(books !== null) {
+                    this.books = books;
+                }
                 console.log(this.books);
             }
         ));
@@ -43,27 +43,30 @@ export class BooksService {
 
     deleteBook(id: number) {
         this.books.splice(id, 1);
-        this.booksChanged.next(this.books.slice());
-        this.updateBookDatabase(id);
+        this.updateBookDatabase();
     }
 
     updateBook(id: number, updatedBook: Book) {
         this.books[id] = updatedBook;
-        this.booksChanged.next(this.books.slice());
-        this.updateBookDatabase(id);
+        this.updateBookDatabase();
     }
 
-    private updateBookDatabase(id: number) {
+    private updateBookDatabase() {
         console.log(this.books);
-        this.http
+        
+        const addBook = this.http
             .put(
-                'https://ng-book-store-ab728.firebaseio.com/books.json/'+id,
-                this.books[id]
-            )
-            .subscribe(
-                response => {
-                    console.log(response);
-                }
+                'https://ng-book-store-ab728.firebaseio.com/books.json/',
+                this.books
             );
+        const getBook = this.http.get<Book[]>(
+            'https://ng-book-store-ab728.firebaseio.com/books.json'
+        );
+        const goToDashboard = this.router.navigateByUrl('books');
+        concat(addBook, getBook, goToDashboard).subscribe(
+            response => {
+                console.log(response);
+            }
+        );
     }
 }

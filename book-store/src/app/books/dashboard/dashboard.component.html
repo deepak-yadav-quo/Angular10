@@ -21,7 +21,7 @@
                     <tr>
                         <th scope="row">{{ i + 1 }}</th>
                         <td>{{ book.name }}</td>
-                        <td><a href="">View</a></td>
+                        <td><a style="cursor: pointer;" (click)="onViewBook(i)">View</a></td>
                         <td><a style="cursor: pointer;" (click)="onEditBook(i)" >Edit</a></td>
                         <td><a style="cursor: pointer;" (click)="onDeleteBook(i)">Delete</a></td>
                     </tr>

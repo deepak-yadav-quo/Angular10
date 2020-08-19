@@ -1,10 +1,10 @@
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { BooksService } from './../books.service';
-import { Book } from './../book.model';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { DatePipe, formatCurrency } from '@angular/common';
 
 @Component({
   selector: 'app-book-edit',
@@ -20,8 +20,9 @@ export class BookEditComponent implements OnInit {
 
 
   constructor(private booksService: BooksService,
+              private route: ActivatedRoute,
               private router: Router,
-              private route: ActivatedRoute) {}
+              private ngbDateParserFormatter: NgbDateParserFormatter) {}
 
   ngOnInit(): void {
 
@@ -39,19 +40,22 @@ export class BookEditComponent implements OnInit {
 
     let bookName = '';
     let authorName = '';
-    let publishDate = new Date();
+    let publishDate;
     let genre = '';
 
     if(this.editMode) {
       const book = this.booksService.getBook(this.id);
       bookName = book.name;
       authorName = book.authorName;
-      publishDate = book.publishDate;
+      //publishDate = book.publishDate;
+      //console.log(publishDate.toDateString().substring(0,10));
+      let dp = new DatePipe(navigator.language);
+      let p = 'y-MM-dd'; // YYYY-MM-DD
+      publishDate = dp.transform(book.publishDate, p);
+      console.log(publishDate)
       genre = book.genre;
-
     }
-    console.log(authorName);
-
+    
     this.bookForm = new FormGroup({
       'name': new FormControl(bookName, [Validators.required]),
       'authorName': new FormControl(authorName, [Validators.required]),
@@ -59,16 +63,25 @@ export class BookEditComponent implements OnInit {
       'genre': new FormControl(genre, [Validators.required])
     });
   }
+
   onAddBook() {
+    const myDate = this.ngbDateParserFormatter.format(this.model);
+    this.bookForm.value['publishDate'] = myDate;
+    
     if(this.editMode) {
       this.booksService.updateBook(this.id, this.bookForm.value);
-      this.router.navigate(['../../'], { relativeTo: this.route })
-
     } else {
+      console.log(this.booksService.books);
       this.booksService.addBook(this.bookForm.value);
-      this.router.navigate(['../'], { relativeTo: this.route })
     }
-    
+  }
+
+  onResetForm() {
+    this.bookForm.reset();
+  }
+
+  onCancel() {
+    this.router.navigateByUrl('books');
   }
 
 }
