@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { concat } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, delay } from 'rxjs/operators';
 
 import { Book } from './book.model';
 
@@ -29,7 +29,8 @@ export class BooksService {
         return this.http.get<Book[]>(
             'https://ng-book-store-ab728.firebaseio.com/books.json'
         )
-        .pipe(tap(
+        .pipe(
+            tap(
             books => {
                 console.log(books);
                 console.log(this.books);
@@ -63,6 +64,7 @@ export class BooksService {
             'https://ng-book-store-ab728.firebaseio.com/books.json'
         );
         const goToDashboard = this.router.navigateByUrl('books');
+
         concat(addBook, getBook, goToDashboard).subscribe(
             response => {
                 console.log(response);

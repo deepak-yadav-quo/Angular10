@@ -20,14 +20,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
               }
 
   ngOnInit(): void {
-    this.booksSubscription = this.booksService.fetchBooks().subscribe(
-      books => {
-        if(books !== null) {
-          this.books = books;
+
+    setTimeout(()=> {
+      this.booksSubscription = this.booksService.fetchBooks().subscribe(
+        books => {
+          if(books !== null) {
+            console.log(books);
+            this.books = books;
+          }
         }
-      }
-    );
-    console.log(this.books);
+      );
+    }
+    ,1000);
+    
   }
 
   addForm() {

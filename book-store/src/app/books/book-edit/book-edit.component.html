@@ -9,7 +9,7 @@
                 <label for="authorName">Author Name</label>
                 <input type="text" class="form-control" formControlName="authorName">
             </div>
-            <div class="form-group">
+            <div class="form-group" >
                 <label for="date">Publish Date</label>
                 <input 
                     class="form-control"
@@ -17,12 +17,7 @@
                     [ngModelOptions]="{standalone: true}"
                     ngbDatepicker #d="ngbDatepicker"
                     formConrolName="publishDate">
-                <div class="input-group-append">
-                    <button 
-                        class="btn btn-outline-secondary calendar fa fa-calendar"
-                        (click)="d.toggle()" 
-                        type="button"></button>
-                </div>    
+                <fa-icon [icon]="faCalendar" (click)="d.toggle()" type="button"></fa-icon>
             </div>
             <div class="form-group">
                 <label for="genre">Genre</label>

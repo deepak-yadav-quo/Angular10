@@ -7,9 +7,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BooksComponent } from './books.component';
 import { BookEditComponent } from './book-edit/book-edit.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { BooksService } from './books.service';
 import { BooksRoutingModule } from './books-routing.module';
 import { BookViewComponent } from './book-view/book-view.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     declarations: [
@@ -24,7 +24,8 @@ import { BookViewComponent } from './book-view/book-view.component';
         ReactiveFormsModule,
         CommonModule,
         NgbModule,
-        BooksRoutingModule
+        BooksRoutingModule,
+        FontAwesomeModule
     ]
 })
 

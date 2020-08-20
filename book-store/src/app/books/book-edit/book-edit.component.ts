@@ -5,6 +5,8 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { BooksService } from './../books.service';
 import { DatePipe, formatCurrency } from '@angular/common';
+import { faCalendar } from '@fortawesome/free-regular-svg-icons';
+
 
 @Component({
   selector: 'app-book-edit',
@@ -17,7 +19,7 @@ export class BookEditComponent implements OnInit {
   bookForm: FormGroup;
   model: NgbDateStruct;
   editMode = false;
-
+  faCalendar = faCalendar;
 
   constructor(private booksService: BooksService,
               private route: ActivatedRoute,
